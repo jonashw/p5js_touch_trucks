@@ -1,10 +1,8 @@
 function Grid(data){
-  this.points = data.points || [];
+  this.points = data.points || new Set();
   this.height = data.h || 0;
   this.scale = data.scale || 10;
-  this.points = data.points || [];
   this.pairs = data.pairs || [];
-  this.pointSet = data.pointSet || new Set();
 
   this.findNearest = p => {
     //This search algorithm is rather aggresive.  It will widen its search area as it goes on.
@@ -12,8 +10,7 @@ function Grid(data){
     let sDelta = this.scale/8;
     let s = this.scale/2;
     while(s<sMax){
-      for(var i=0; i<data.points.length; i++){
-        let n = data.points[i];
+      for(let n of data.points){
         //Each node has an axis-aligned bounding box.
         if(n.x - s <= p.x && p.x <= n.x + s
         && n.y - s <= p.y && p.y <= n.y + s){
@@ -28,13 +25,13 @@ function Grid(data){
   };
 
   let nodeToNeighbors = new Map();
-  data.pairs.forEach(([a,b]) => {
+  for(let [a,b] of data.pairs){
     if(!nodeToNeighbors.has(a)){
       nodeToNeighbors.set(a,[]);
     }
     let ns = nodeToNeighbors.get(a);
     ns.push(b);
-  });
+  }
 
   this.getNeighbors = n =>
     nodeToNeighbors.has(n)
@@ -44,11 +41,11 @@ function Grid(data){
   this.draw = () => {
     push();
     noStroke();
-    data.points.forEach(p => {
+    for(let p of data.points){
       fill(0,0,255);
       ellipse(p.x, p.y, 8);
-    });
-    data.pairs.forEach(([a,b]) => {
+    }
+    for(let [a,b] of data.pairs){
       stroke(255);
       strokeWeight(1);
       line(
@@ -56,7 +53,7 @@ function Grid(data){
         a.y,
         b.x,
         b.y);
-    });
+    }
     pop();
   };
 }

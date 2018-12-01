@@ -8,7 +8,7 @@ function createCheckerGrid(w,h,scale){
           : cachedVector(x * scale, y * scale))
         .filter(p => !!p)));
 
-  var pointSet = new Set(points);
+  let pointSet = new Set(points);
 
   let pairs = 
     concatAll(
@@ -26,7 +26,6 @@ function createCheckerGrid(w,h,scale){
     width: w,
     height: h,
     points: points,
-    pointSet: pointSet,
     pairs: pairs,
     scale: scale
   });
