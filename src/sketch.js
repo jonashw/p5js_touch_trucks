@@ -21,7 +21,7 @@ function setup() {
     {name: 'Checker 7x7', grid: createCheckerGrid(7,7,80)}
   ];
 
-  let startingLevel = levels[1];
+  let startingLevel = levels[3];
   initLevel(startingLevel);
   initLevelMenu(levels, startingLevel);
 
@@ -38,16 +38,20 @@ function initLevel(level){
 
 function initLevelMenu(levels, selectedLevel){
   var levelMenu = createSelect();
-  levelMenu.position(10, 10);
+  levelMenu.position(10, windowHeight - 50);
   levels.forEach(l => levelMenu.option(l.name));
   if(selectedLevel){
     levelMenu.value(selectedLevel.name);
   }
+  levelMenu.style('font-size','2em');
   levelMenu.changed(function(){
     let v = levelMenu.value();
     let level = levels.find(l => l.name === v);
     console.log('level changed',levelMenu.value(),level);
     initLevel(level);
+  });
+  $(document).on('click touchstart','select',function(e){
+    e.stopPropagation();
   });
 }
 
