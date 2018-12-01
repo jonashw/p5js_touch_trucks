@@ -11,15 +11,42 @@ function setup() {
   rectMode(CENTER); 
   angleMode(DEGREES);
 
-  grid = createCheckerGrid(7,7,80);
-  car = createCar(createVector(1, 1), createVector(1,0));
-  navigation = createNavigation(grid);
+  let levels = [
+    {name: 'Noodle 11x8', grid: createNoodleGrid(11,8,60)},
+    {name: 'Checker 4x4', grid: createCheckerGrid(4,4,80)},
+    {name: 'Checker 5x5', grid: createCheckerGrid(5,5,80)},
+    {name: 'Checker 7x7', grid: createCheckerGrid(7,7,80)}
+  ];
+
+  let startingLevel = levels[0];
+  initLevel(startingLevel);
+  initLevelMenu(levels, startingLevel);
 
   resizeCanvas(windowWidth, windowHeight);
-
-  car = createCar(createVector(grid.scale, grid.scale), createVector(1,0));
-  autoRun();
 } 
+
+function initLevel(level){
+  grid = level.grid;
+  let carPosition = grid.findNearest(createVector(grid.scale, grid.scale));
+  car = createCar(carPosition, createVector(1,0));
+  navigation = createNavigation(grid);
+  autoRun();
+}
+
+function initLevelMenu(levels, selectedLevel){
+  var levelMenu = createSelect();
+  levelMenu.position(10, 10);
+  levels.forEach(l => levelMenu.option(l.name));
+  if(selectedLevel){
+    levelMenu.value(selectedLevel.name);
+  }
+  levelMenu.changed(function(){
+    let v = levelMenu.value();
+    let level = levels.find(l => l.name === v);
+    console.log('level changed',levelMenu.value(),level);
+    initLevel(level);
+  });
+}
 
 function preload(){ }
 function mouseMoved(){  }

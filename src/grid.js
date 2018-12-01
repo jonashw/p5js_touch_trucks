@@ -7,16 +7,23 @@ function Grid(data){
   this.pointSet = data.pointSet || new Set();
 
   this.findNearest = p => {
-    //Each node has an axis-aligned bounding box.
+    //This search algorithm is rather aggresive.  It will widen its search area as it goes on.
+    let sMax = this.scale*8;
+    let sDelta = this.scale/8;
     let s = this.scale/2;
-    for(var i=0; i<data.points.length; i++){
-      let n = data.points[i];
-      if(n.x - s <= p.x && p.x <= n.x + s
-      && n.y - s <= p.y && p.y <= n.y + s){
-        console.log('nearest node: ', vectorToString(n));
-        return n;
+    while(s<sMax){
+      for(var i=0; i<data.points.length; i++){
+        let n = data.points[i];
+        //Each node has an axis-aligned bounding box.
+        if(n.x - s <= p.x && p.x <= n.x + s
+        && n.y - s <= p.y && p.y <= n.y + s){
+          console.log('nearest node: ', vectorToString(n));
+          return n;
+        }
       }
+      s += sDelta;
     }
+
     console.log('no nearest node found');
   };
 
