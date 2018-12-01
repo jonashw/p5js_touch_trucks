@@ -1,24 +1,26 @@
+function autoRun(){
+  handlePointAction({x:442,y:242});
+}
+
 var looping = true;
 
 var grid, car, navigation;
-
-function preload(){
-}
 
 function setup() { 
   colorMode(HSL,255);
   rectMode(CENTER); 
   angleMode(DEGREES);
 
-  grid = createGrid(7,7,80);
+  grid = createCheckerGrid(7,7,80);
   car = createCar(createVector(1, 1), createVector(1,0));
   navigation = createNavigation(grid);
 
   resizeCanvas(windowWidth, windowHeight);
 
-  handlePointAction({x:442,y:242});
+  autoRun();
 } 
 
+function preload(){ }
 function mouseMoved(){  }
 function touchMoved(){  }
 
@@ -34,8 +36,9 @@ function mousePressed(){
   handlePointAction(createVector(mouseX,mouseY));
 }
 
+
 function handlePointAction(point){
-  console.log('point action:', point);
+  console.log('point action:', vectorToString(point));
   navigation.routeImproved(car.getPosition(), point, car.getHeading());
   car.schedule(100,() => {
     let target = navigation.popTarget();
@@ -44,7 +47,6 @@ function handlePointAction(point){
     }
   });
 }
-
 
 function keyPressed(){
   if(key == 'D'){

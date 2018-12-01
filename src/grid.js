@@ -1,90 +1,24 @@
-function createGrid(w,h,scale){
-  let cachedVector = (() => {
-    var map = new Map();
-    return (x,y) => {
-      let key = `${x}:${y}`;
-      if(map.has(key)){
-        return map.get(key);
-      }
-      let v = createVector(x,y);
-      map.set(key, v);
-      return v;
-    };
-  })();
+function Grid(data){
+  this.points = data.points || [];
+  this.height = data.h || 0;
+  this.scale = data.scale || 10;
+  this.points = data.points || [];
+  this.pairs = data.pairs || [];
+  this.pointSet = data.pointSet || new Set();
 
-  var grid = {
-    width: w,
-    height: h,
-    scale: scale,
-    points: [],
-    pointSet: new Set(),
-    cachedVector: cachedVector,
-    findNearest: p => {
-      let s = scale/2;
-      let projected = cachedVector(
-        Math.min(Math.floor((p.x + s) / scale), w),
-        Math.min(Math.floor((p.y + s) / scale), h));
-      if(!grid.pointSet.has(projected)){
-        return undefined;
-      }
-      return projected;
-    },
-    draw: () => {
-      push();
-      noStroke();
-      grid.points.forEach(p => {
-        fill(0,0,255);
-        ellipse(p.x * scale, p.y * scale, 8);
-      });
-      grid.pairs.forEach(([a,b]) => {
-        stroke(255);
-        strokeWeight(1);
-        line(
-          a.x * scale,
-          a.y * scale,
-          b.x * scale,
-          b.y * scale);
-      });
-      pop();
+  this.findNearest = p => {
+    let projected = cachedVector(
+      Math.min(Math.floor((p.x + data.scale/2) / data.scale), data.width),
+      Math.min(Math.floor((p.y + data.scale/2) / data.scale), data.height));
+    if(!data.pointSet.has(projected)){
+      return undefined;
     }
+    console.log('nearest node: ', vectorToString(projected));
+    return projected;
   };
 
-  grid.points = 
-    concatAll(
-      range(1,grid.width).map(x =>
-        range(1,grid.height).map(y =>
-          x%2==0 && y%2==0
-          ? undefined
-          : cachedVector(x, y))
-        .filter(p => !!p)));
-
-  for(let p of grid.points){
-    grid.pointSet.add(p);
-  }
-
-  let allPoints = 
-    concatAll(
-      range(1,grid.width)
-      .map(x =>
-        range(1,grid.height)
-        .map(y => cachedVector(x,y))
-        .filter(p => grid.pointSet.has(p))));
-
-  let pairs = 
-    concatAll(
-      allPoints.map(a =>
-        [
-          cachedVector(a.x-1, a.y+0),
-          cachedVector(a.x+1, a.y+0),
-          cachedVector(a.x+0, a.y-1),
-          cachedVector(a.x+0, a.y+1)
-        ].filter(b => grid.pointSet.has(b))
-        .map(b => [a,b])
-      ));
-    grid.pairs = pairs;
-
   let nodeToNeighbors = new Map();
-  pairs.forEach(([a,b]) => {
+  data.pairs.forEach(([a,b]) => {
     if(!nodeToNeighbors.has(a)){
       nodeToNeighbors.set(a,[]);
     }
@@ -92,10 +26,27 @@ function createGrid(w,h,scale){
     ns.push(b);
   });
 
-  grid.getNeighbors = n =>
+  this.getNeighbors = n =>
     nodeToNeighbors.has(n)
     ? nodeToNeighbors.get(n)
     : [];
 
-  return grid;
+  this.draw = () => {
+    push();
+    noStroke();
+    data.points.forEach(p => {
+      fill(0,0,255);
+      ellipse(p.x * data.scale, p.y * data.scale, 8);
+    });
+    data.pairs.forEach(([a,b]) => {
+      stroke(255);
+      strokeWeight(1);
+      line(
+        a.x * data.scale,
+        a.y * data.scale,
+        b.x * data.scale,
+        b.y * data.scale);
+    });
+    pop();
+  };
 }

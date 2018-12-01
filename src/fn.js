@@ -1,3 +1,20 @@
+function vectorToString(v){
+  return "(" + v.x + "," + v.y + ")";
+}
+
+var cachedVector = (() => {
+  var map = new Map();
+  return (x,y) => {
+    let key = `${x}:${y}`;
+    if(map.has(key)){
+      return map.get(key);
+    }
+    let v = createVector(x,y);
+    map.set(key, v);
+    return v;
+  };
+})();
+
 function range(from,to){
   return from < to
     ? _range(from,to)

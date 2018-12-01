@@ -20,8 +20,8 @@ function createNavigation(grid) {
 			if(!b){
 				return;
 			}
-			a = grid.cachedVector(a.x, a.y);
-			b = grid.cachedVector(b.x, b.y);
+			a = cachedVector(a.x, a.y);
+			b = cachedVector(b.x, b.y);
 			_target = b;
 			grid.points.forEach(p => 
 			{
@@ -75,7 +75,7 @@ function createNavigation(grid) {
 			}
 			let n = b;
 			let ns = [b];
-			while(n !== a){
+			while(n !== a && !!n && !!n.via){
 				ns.unshift(n.via);
 				n = n.via;
 			}
@@ -87,7 +87,8 @@ function createNavigation(grid) {
 					a: a,
 					b: b
 				}));
-				console.log(_legs);
+
+			console.log(`routeImproved: ${vectorToString(a)} -> ${vectorToString(b)}`,_legs);
 		},
 		route: (a, b, heading) => {
 			var b = grid.findNearest(b);
