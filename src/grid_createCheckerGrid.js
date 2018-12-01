@@ -8,24 +8,12 @@ function createCheckerGrid(w,h,scale){
           : cachedVector(x * scale, y * scale))
         .filter(p => !!p)));
 
-  let pointSet = new Set(points);
-
-  let pairs = 
-    concatAll(
-      points.map(a =>
-        [
-          cachedVector(a.x - (1 * scale), a.y + (0 * scale)),
-          cachedVector(a.x + (1 * scale), a.y + (0 * scale)),
-          cachedVector(a.x + (0 * scale), a.y - (1 * scale)),
-          cachedVector(a.x + (0 * scale), a.y + (1 * scale))
-        ].filter(b => pointSet.has(b))
-        .map(b => [a,b])
-      ));
+  let pairs = fullMeshPairs(points, scale);
 
   return new Grid({
     width: w,
     height: h,
-    points: points,
+    points: new Set(points),
     pairs: pairs,
     scale: scale
   });

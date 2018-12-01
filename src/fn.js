@@ -103,3 +103,38 @@ function prioritizedMap(){
 function concatAll(arrays){
   return Array.prototype.concat.apply([], arrays);
 }
+
+function fullMeshPairs(points, neighborDistance, pointSet /* optional */){
+    pointSet = pointSet || new Set(points);
+    return concatAll(
+      points.map(a =>
+        [
+          cachedVector(a.x - (1 * neighborDistance), a.y + (0 * neighborDistance)),
+          cachedVector(a.x + (1 * neighborDistance), a.y + (0 * neighborDistance)),
+          cachedVector(a.x + (0 * neighborDistance), a.y - (1 * neighborDistance)),
+          cachedVector(a.x + (0 * neighborDistance), a.y + (1 * neighborDistance))
+        ].filter(b => pointSet.has(b))
+        .map(b => [a,b])
+      ));
+}
+
+function zigZagPattern(zero,dx,dy,n){
+    let x = zero.x;
+    let y = zero.y;
+    let points = [];
+    var direction = new CircularArray([
+        {iterations: dy, step: () => y--},
+        {iterations: dx, step: () => x++},
+        {iterations: dy, step: () => y++},
+        {iterations: dx, step: () => x++}
+    ]);
+    points.push(zero);
+    for(var i=0; i<n; i++){
+        for(var j=0; j<direction.getCurrent().iterations; j++){
+            direction.getCurrent().step();
+            points.push(createVector(x,y));
+        }
+        direction.moveNext();
+    }
+    return points;
+}
