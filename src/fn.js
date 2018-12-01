@@ -104,9 +104,46 @@ function concatAll(arrays){
   return Array.prototype.concat.apply([], arrays);
 }
 
-function fullMeshPairs(points, neighborDistance, pointSet /* optional */){
-    pointSet = pointSet || new Set(points);
-    return concatAll(
+function zigZagPattern(zero,n,directions){
+    let points = [];
+    var direction = new CircularArray(directions);
+    let position = createVector(zero.x, zero.y);
+    points.push(createVector(zero.x, zero.y));
+    for(var i=0; i<n; i++){
+        for(var j=0; j<direction.getCurrent().iterations; j++){
+            direction.getCurrent().step(position);
+            points.push(createVector(position.x,position.y));
+        }
+        direction.moveNext();
+    }
+    return points;
+}
+
+function Mesh(points,pairs){
+    this.points = new Set(points);
+    this.pairs = pairs;
+    this.subtract = pointsToRemove => {
+        let finalPoints = new Set(this.points);
+        pointsToRemove.forEach(p => {
+            finalPoints.delete(p);
+        });
+        let finalPairs = this.pairs.filter(([a,b]) => 
+            !pointsToRemove.some(p => p == a || p == b));
+        return new Mesh(finalPoints, finalPairs);
+    };
+}
+
+function perfectGridMesh(w,h,scale){
+    let points = concatAll(
+      range(1,w).map(x => 
+      range(1,h).map(y =>
+        cachedVector(x*scale,y*scale))));
+    return fullMesh(points, scale);
+}
+
+function fullMesh(points, neighborDistance){
+    let pointSet = new Set(points);
+    let pairs = concatAll(
       points.map(a =>
         [
           cachedVector(a.x - (1 * neighborDistance), a.y + (0 * neighborDistance)),
@@ -116,25 +153,5 @@ function fullMeshPairs(points, neighborDistance, pointSet /* optional */){
         ].filter(b => pointSet.has(b))
         .map(b => [a,b])
       ));
-}
-
-function zigZagPattern(zero,dx,dy,n){
-    let x = zero.x;
-    let y = zero.y;
-    let points = [];
-    var direction = new CircularArray([
-        {iterations: dy, step: () => y--},
-        {iterations: dx, step: () => x++},
-        {iterations: dy, step: () => y++},
-        {iterations: dx, step: () => x++}
-    ]);
-    points.push(zero);
-    for(var i=0; i<n; i++){
-        for(var j=0; j<direction.getCurrent().iterations; j++){
-            direction.getCurrent().step();
-            points.push(createVector(x,y));
-        }
-        direction.moveNext();
-    }
-    return points;
+      return new Mesh(pointSet,pairs);
 }

@@ -12,13 +12,16 @@ function setup() {
   angleMode(DEGREES);
 
   let levels = [
+    {name: 'ZigZag', grid: createZigZagGrid(9,6,70) },
+    {name: 'Vertical Stripes', grid: createVerticalStripesGrid(11,8,60) },
+    {name: 'Plus 11x9', grid: createPlusGrid(11,9,60)},
     {name: 'Noodle 11x8', grid: createNoodleGrid(11,8,60)},
     {name: 'Checker 4x4', grid: createCheckerGrid(4,4,80)},
     {name: 'Checker 5x5', grid: createCheckerGrid(5,5,80)},
     {name: 'Checker 7x7', grid: createCheckerGrid(7,7,80)}
   ];
 
-  let startingLevel = levels[0];
+  let startingLevel = levels[1];
   initLevel(startingLevel);
   initLevelMenu(levels, startingLevel);
 
