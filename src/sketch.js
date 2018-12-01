@@ -17,6 +17,7 @@ function setup() {
 
   resizeCanvas(windowWidth, windowHeight);
 
+  car = createCar(createVector(grid.scale, grid.scale), createVector(1,0));
   autoRun();
 } 
 

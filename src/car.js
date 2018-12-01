@@ -36,8 +36,8 @@ function createCar(position, heading){
       noStroke();
       fill(_colorA);
       translate(
-        position.x * grid.scale,
-        position.y * grid.scale);
+        position.x,
+        position.y);
       if(heading.equals(N)){ rotate(-90); }
       if(heading.equals(S)){ rotate( 90); }
       if(heading.equals(E)){ rotate(  0); }

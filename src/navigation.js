@@ -18,6 +18,7 @@ function createNavigation(grid) {
 				 initial node as current. */
 			b = grid.findNearest(b);
 			if(!b){
+				console.log('no nearest node found');
 				return;
 			}
 			a = cachedVector(a.x, a.y);
@@ -141,16 +142,16 @@ function createNavigation(grid) {
 						fill(0);
 						stroke(50, 200, 150);
 						strokeWeight(3)
-						ellipse(leg.position.x * grid.scale, leg.position.y * grid.scale, 40, 40);
+						ellipse(leg.position.x, leg.position.y, 40, 40);
 						break;
 					case 'straight':
 						stroke(50, 200, 150);
 						strokeWeight(10);
 						line(
-							leg.a.x * grid.scale,
-							leg.a.y * grid.scale,
-							leg.b.x * grid.scale,
-							leg.b.y * grid.scale);
+							leg.a.x,
+							leg.a.y,
+							leg.b.x,
+							leg.b.y);
 						break;
 				}
 			}
@@ -158,7 +159,7 @@ function createNavigation(grid) {
 			push();
 			noStroke();
 			fill(50, 200, 150);
-			ellipse(_target.x * grid.scale, _target.y * grid.scale, 30, 30);
+			ellipse(_target.x, _target.y, 30, 30);
 			pop();
 		}
 	};

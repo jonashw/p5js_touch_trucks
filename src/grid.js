@@ -7,14 +7,17 @@ function Grid(data){
   this.pointSet = data.pointSet || new Set();
 
   this.findNearest = p => {
-    let projected = cachedVector(
-      Math.min(Math.floor((p.x + data.scale/2) / data.scale), data.width),
-      Math.min(Math.floor((p.y + data.scale/2) / data.scale), data.height));
-    if(!data.pointSet.has(projected)){
-      return undefined;
+    //Each node has an axis-aligned bounding box.
+    let s = this.scale/2;
+    for(var i=0; i<data.points.length; i++){
+      let n = data.points[i];
+      if(n.x - s <= p.x && p.x <= n.x + s
+      && n.y - s <= p.y && p.y <= n.y + s){
+        console.log('nearest node: ', vectorToString(n));
+        return n;
+      }
     }
-    console.log('nearest node: ', vectorToString(projected));
-    return projected;
+    console.log('no nearest node found');
   };
 
   let nodeToNeighbors = new Map();
@@ -36,16 +39,16 @@ function Grid(data){
     noStroke();
     data.points.forEach(p => {
       fill(0,0,255);
-      ellipse(p.x * data.scale, p.y * data.scale, 8);
+      ellipse(p.x, p.y, 8);
     });
     data.pairs.forEach(([a,b]) => {
       stroke(255);
       strokeWeight(1);
       line(
-        a.x * data.scale,
-        a.y * data.scale,
-        b.x * data.scale,
-        b.y * data.scale);
+        a.x,
+        a.y,
+        b.x,
+        b.y);
     });
     pop();
   };
