@@ -3,7 +3,7 @@ function createNoodleGrid(w,h,scale){
         zigZagPattern(createVector(1,h), 1, 6, 13)
         .map(p => cachedVector(p.x * scale,p.y * scale));
 
-    var pairs = pairwise(points);
+    var pairs = pairwise(points).concat(pairwise(points.reverse()));
 
     console.log('points',points);
 
