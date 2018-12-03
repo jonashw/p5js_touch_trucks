@@ -155,3 +155,25 @@ function fullMesh(points, neighborDistance){
       ));
       return new Mesh(pointSet,pairs);
 }
+
+function sequence(startingPosition,steps){
+    let position = createVector(startingPosition.x, startingPosition.y);
+    let points = steps.map(step => {
+        if(step.x){
+            position.x += step.x;
+        }
+        if(step.y){
+            position.y += step.y;
+        }
+        return cachedVector(position.x, position.y);
+    });
+    points.unshift(createVector(startingPosition.x, startingPosition.y));
+    return {
+        points,
+        endingPosition: position
+    };
+}
+
+function pairsOf(points){
+    return pairwise(points).concat(pairwise(points.reverse()));
+}

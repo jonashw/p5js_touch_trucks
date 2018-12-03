@@ -4,11 +4,7 @@ function createPlusGrid(w,h,scale){
         .concat(
             range(2,h-1).map(y => cachedVector(scale*Math.ceil(w/2), scale*y)));
 
-   var drivablePoints = 
-        concatAll(
-            range(1,w).map(x => 
-            range(1,h).map(y =>
-                cachedVector(x*scale,y*scale))));
+   var drivablePoints = Array.from(perfectGridMesh(w,h,scale).points);
 
     let mesh = fullMesh(drivablePoints,scale).subtract(obstaclePoints);
 
@@ -56,13 +52,11 @@ function createZigZagGrid(w,h,scale){
             ])
         .map(p => cachedVector(p.x * scale, p.y * scale));
 
-    let pairs = pairwise(points).concat(pairwise(points.reverse()));
-
     return new Grid({
         width: w,
         height: h,
         points: new Set(points),
-        pairs: pairs,
+        pairs: pairsOf(points),
         scale: scale
     });
 }

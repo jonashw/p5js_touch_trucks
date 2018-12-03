@@ -12,17 +12,23 @@ function setup() {
   angleMode(DEGREES);
 
   let levels = [
-    {name: 'ZigZag', grid: createZigZagGrid(9,6,70) },
+    {name: 'Letter S',         grid: createAlphaGrid('S',80)},
+    {name: 'Letter A',         grid: createAlphaGrid('A',80)},
+    {name: 'Letter W',         grid: createAlphaGrid('W',80)},
+    {name: 'Letter Y',         grid: createAlphaGrid('Y',80)},
+    {name: 'Letter E',         grid: createAlphaGrid('E',80)},
+    {name: 'Letter R',         grid: createAlphaGrid('R',80)},
+    {name: 'ZigZag',           grid: createZigZagGrid(9,6,70) },
     {name: 'Vertical Stripes', grid: createVerticalStripesGrid(11,8,60) },
-    {name: 'Plus 11x9', grid: createPlusGrid(11,9,60)},
-    {name: 'Noodle 11x8', grid: createNoodleGrid(11,8,60)},
-    {name: 'Checker 4x4', grid: createCheckerGrid(4,4,80)},
-    {name: 'Checker 5x5', grid: createCheckerGrid(5,5,80)},
-    {name: 'Checker 7x7', grid: createCheckerGrid(7,7,80)}
+    {name: 'Plus 11x9',        grid: createPlusGrid(11,9,60)},
+    {name: 'Noodle 11x8',      grid: createNoodleGrid(11,8,60)},
+    {name: 'Checker 4x4',      grid: createCheckerGrid(4,4,80)},
+    {name: 'Checker 5x5',      grid: createCheckerGrid(5,5,80)},
+    {name: 'Checker 7x7',      grid: createCheckerGrid(7,7,80)},
   ];
 
-  let startingLevel = levels[3];
-  initTimerDurationMenu([10,50,100,150,200], 100);
+  let startingLevel = levels[0];
+  initTimerDurationMenu([10,25,50,100,150,200], 50);
   initLevelMenu(levels, startingLevel);
 
   initLevel(startingLevel);
