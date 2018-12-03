@@ -44,20 +44,34 @@ function initLevel(level){
   autoRun();
 }
 
+var trySelectLevelByIndex, levelMenu;
 function initLevelMenu(levels, selectedLevel){
-  var levelMenu = createSelect();
+  levelMenu = createSelect();
   levelMenu.position(10, windowHeight - 50);
   levels.forEach(l => levelMenu.option(l.name));
   if(selectedLevel){
     levelMenu.value(selectedLevel.name);
   }
+
   levelMenu.style('font-size','2em');
-  levelMenu.changed(function(){
+
+  function changed(){
     let v = levelMenu.value();
     let level = levels.find(l => l.name === v);
     console.log('level changed',levelMenu.value(),level);
     initLevel(level);
   }
+
+  levelMenu.changed(changed);
+
+  let options = Array.from(levelMenu.child());
+  trySelectLevelByIndex = index => {
+    let selected = options[index - 1];
+    if(selected){
+      levelMenu.value(selected.value);
+      changed();
+    }
+  };
 }
 
 function initTimerDurationMenu(durations,selectedDuration){
@@ -106,6 +120,11 @@ function handlePointAction(point){
 
 function keyPressed(){
   if(key == 'D'){
+  }
+  let n = parseInt(key);
+  if(!isNaN(n)){
+    console.log('you pressed a number:', n);
+    trySelectLevelByIndex(n);
   }
   if(keyCode == ESCAPE){
     looping = !looping;
