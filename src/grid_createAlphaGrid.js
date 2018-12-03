@@ -1,5 +1,5 @@
 function createAlphaGrid(letter){
-    let scale = windowHeight / (5 + 1);
+    let scale = Math.min(windowHeight / (5 + 1), windowWidth / 5);
     let w = 10;
     let h = 6;
     var points=[],pairs=[];
@@ -19,43 +19,47 @@ function createAlphaGrid(letter){
             pairs = pairsOf(points);
             break;
         case 'A': 
-            points = 
-                sequence(
-                    {x:1, y:5},
-                    [
-                        {x:+1,y:-2},
-                        {x:+1,y:-2},
-                        {x:+1,y:+2},
-                        {x:+1,y:+2}
-                    ]).points
-                .map(p => cachedVector(p.x * scale, p.y * scale));
-            pairs = pairsOf(points);
-            let crossPair = [
-                cachedVector(scale*2,scale*3),
-                cachedVector(scale*4,scale*3)
+            scale = Math.min(windowWidth / (5+1), windowHeight / (6+1));
+            points = [
+                cachedVector(scale*1,scale*6.0),
+                cachedVector(scale*2,scale*3.5),
+                cachedVector(scale*3,scale*1.0),
+                cachedVector(scale*4,scale*3.5),
+                cachedVector(scale*5,scale*6.0),
             ];
-            pairs.push(crossPair);
-            pairs.push(crossPair.reverse());
+            function bidirectionalPairs(pairs){
+                let backPairs = pairs.map(p => p.slice(0).reverse());
+                return pairs.concat(backPairs);
+            }
+            pairs = bidirectionalPairs([
+                [points[0],points[1]],
+                [points[1],points[2]],
+                [points[2],points[3]],
+                [points[3],points[4]],
+                [points[1],points[3]]
+            ]);
             break;
         case 'W':
+            scale = Math.min(windowWidth / (5+1), windowHeight / (6+1));
             points = 
                 sequence(
                     {x:1, y:1},
                     [
-                        {x:+1,y:+4},
-                        {x:+1,y:-2},
-                        {x:+1,y:+2},
-                        {x:+1,y:-4}
+                        {x:+1,y:+5},
+                        {x:+1,y:-2.5},
+                        {x:+1,y:+2.5},
+                        {x:+1,y:-5}
                     ]).points
                 .map(p => cachedVector(p.x * scale, p.y * scale));
             pairs = pairsOf(points);
             break;
         case 'Y':
+            scale = Math.min(windowWidth / (5+1), windowHeight / (6+1));
             points = [
                 cachedVector(scale*1,scale*1),
-                cachedVector(scale*3,scale*2.5),
+                cachedVector(scale*3,scale*3),
                 cachedVector(scale*5,scale*1),
-                cachedVector(scale*3,scale*5)
+                cachedVector(scale*3,scale*6)
             ];
             pairs = [
                 [points[0], points[1]], [points[1], points[0]],
@@ -81,6 +85,7 @@ function createAlphaGrid(letter){
             ];
             break;
         case 'R':
+            scale = Math.min(windowHeight / (5 + 1), windowWidth / 5);
             points = [
                 cachedVector(scale*1,scale*1),
                 cachedVector(scale*4,scale*1),
