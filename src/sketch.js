@@ -25,13 +25,12 @@ function setup() {
     {name: 'Checker 4x4',      grid: createCheckerGrid(4,4)},
     {name: 'Checker 5x5',      grid: createCheckerGrid(5,5)},
     {name: 'Checker 7x7',      grid: createCheckerGrid(7,7)},
+    {name: 'Checker 12x12',    grid: createCheckerGrid(13,13)},
   ];
 
   let startingLevel = levels[1];
   initTimerDurationMenu([10,25,50,100,150,200], 50);
   initLevelMenu(levels, startingLevel);
-
-  initLevel(startingLevel);
 
   $(document).on('click touchstart mousedown','select',function(e){
     /* This allows desktop users to use the select menus without 
@@ -52,10 +51,21 @@ function initLevel(level){
 
 var trySelectLevelByIndex, levelMenu;
 function initLevelMenu(levels, selectedLevel){
+  let _storageKey = 'levelName';
   levelMenu = createSelect();
   levelMenu.position(10, windowHeight - 50);
   levels.forEach(l => levelMenu.option(l.name));
-  if(selectedLevel){
+  let persistedLevelName = localStorage.getItem(_storageKey);
+  let persistedLevel = levels.find(l => l.name == persistedLevelName);
+  if(persistedLevel){
+    levelMenu.value(persistedLevelName);
+    selectedLevel = persistedLevel;
+  }
+  else if(selectedLevel){
+    levelMenu.value(selectedLevel.name);
+  }
+  else {
+    selectedLevel = levels[0];
     levelMenu.value(selectedLevel.name);
   }
 
@@ -65,6 +75,7 @@ function initLevelMenu(levels, selectedLevel){
     let v = levelMenu.value();
     let level = levels.find(l => l.name === v);
     console.log('level changed',levelMenu.value(),level);
+    localStorage.setItem(_storageKey, v);
     initLevel(level);
   }
 
@@ -78,14 +89,21 @@ function initLevelMenu(levels, selectedLevel){
       changed();
     }
   };
+
+  initLevel(selectedLevel);
 }
 
 function initTimerDurationMenu(durations,selectedDuration){
+  let _storageKey = 'timerDuration';
   var menu = createSelect();
   durationMenu = menu;
   menu.position(windowWidth - 110, windowHeight - 50);
   durations.forEach(d => menu.option(d));
-  if(selectedDuration){
+  let persistedDuration = parseInt(localStorage.getItem(_storageKey));
+  if(persistedDuration && durations.indexOf(persistedDuration) > -1){
+    menu.value(persistedDuration);
+  }
+  else if(selectedDuration){
     menu.value(selectedDuration);
   } else {
     menu.value(durations[0]);
@@ -93,6 +111,7 @@ function initTimerDurationMenu(durations,selectedDuration){
   menu.style('font-size','2em');
   menu.changed(function(){
     let v = menu.value();
+    localStorage.setItem(_storageKey, v);
     console.log('duration changed: ', v);
   });
 }
