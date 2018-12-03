@@ -27,6 +27,12 @@ function setup() {
 
   initLevel(startingLevel);
 
+  $(document).on('click touchstart mousedown','select',function(e){
+    /* This allows desktop users to use the select menus without 
+    ** affecting the game itself. */
+    e.stopPropagation();
+  });
+
   resizeCanvas(windowWidth, windowHeight);
 } 
 
@@ -51,10 +57,7 @@ function initLevelMenu(levels, selectedLevel){
     let level = levels.find(l => l.name === v);
     console.log('level changed',levelMenu.value(),level);
     initLevel(level);
-  });
-  $(document).on('click touchstart','select',function(e){
-    e.stopPropagation();
-  });
+  }
 }
 
 function initTimerDurationMenu(durations,selectedDuration){
@@ -71,9 +74,6 @@ function initTimerDurationMenu(durations,selectedDuration){
   menu.changed(function(){
     let v = menu.value();
     console.log('duration changed: ', v);
-  });
-  $(document).on('click touchstart','select',function(e){
-    e.stopPropagation();
   });
 }
 
