@@ -1,4 +1,5 @@
-function createAlphaGrid(letter,scale){
+function createAlphaGrid(letter){
+    let scale = windowHeight / (5 + 1);
     let w = 10;
     let h = 6;
     var points=[],pairs=[];

@@ -28,6 +28,24 @@ function range(from,to){
   }
 }
 
+function repeat(value,n){
+  var xs = [];
+  for(var i=0; i<n; i++){
+    xs.push(value);
+  }
+  return xs;
+}
+
+function cycle(values,n){
+  var xs = [];
+  for(var i=0; i<n; i++){
+    for(var j=0; j<values.length; j++){
+      xs.push(values[j]);
+    }
+  }
+  return xs;
+}
+
 function pairwise(array){
   if(!array || !array.length || array.length < 2){
     return [];

@@ -1,4 +1,5 @@
-function createCheckerGrid(w,h,scale){
+function createCheckerGrid(w,h){
+  let scale = Math.min(windowWidth/(w+1), windowHeight/(h+1));
   var points = 
     concatAll(
       range(1,w).map(x =>
