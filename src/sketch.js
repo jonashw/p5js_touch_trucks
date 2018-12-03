@@ -4,7 +4,7 @@ function autoRun(){
 
 var looping = true;
 
-var grid, car, navigation;
+var grid, car, navigation, durationMenu;
 
 function setup() { 
   colorMode(HSL,255);
@@ -22,8 +22,10 @@ function setup() {
   ];
 
   let startingLevel = levels[3];
-  initLevel(startingLevel);
+  initTimerDurationMenu([10,50,100,150,200], 100);
   initLevelMenu(levels, startingLevel);
+
+  initLevel(startingLevel);
 
   resizeCanvas(windowWidth, windowHeight);
 } 
@@ -55,6 +57,26 @@ function initLevelMenu(levels, selectedLevel){
   });
 }
 
+function initTimerDurationMenu(durations,selectedDuration){
+  var menu = createSelect();
+  durationMenu = menu;
+  menu.position(windowWidth - 110, windowHeight - 50);
+  durations.forEach(d => menu.option(d));
+  if(selectedDuration){
+    menu.value(selectedDuration);
+  } else {
+    menu.value(durations[0]);
+  }
+  menu.style('font-size','2em');
+  menu.changed(function(){
+    let v = menu.value();
+    console.log('duration changed: ', v);
+  });
+  $(document).on('click touchstart','select',function(e){
+    e.stopPropagation();
+  });
+}
+
 function preload(){ }
 function mouseMoved(){  }
 function touchMoved(){  }
@@ -71,11 +93,10 @@ function mousePressed(){
   handlePointAction(createVector(mouseX,mouseY));
 }
 
-
 function handlePointAction(point){
   console.log('point action:', vectorToString(point));
   navigation.routeImproved(car.getPosition(), point, car.getHeading());
-  car.schedule(100,() => {
+  car.schedule(durationMenu.value(),() => {
     let target = navigation.popTarget();
     if(target){
       car.setPosition(target);
