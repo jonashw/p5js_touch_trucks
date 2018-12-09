@@ -4,7 +4,7 @@ function autoRun(){
 
 var looping = true;
 
-var grid, car, navigation, durationMenu;
+var grid, timerDot, navigation, durationMenu;
 
 function setup() { 
   colorMode(HSL,255);
@@ -43,8 +43,8 @@ function setup() {
 
 function initLevel(level){
   grid = level.grid;
-  let carPosition = grid.findNearest(createVector(grid.scale, grid.scale));
-  car = createCar(carPosition, createVector(1,0));
+  let dotPosition = grid.findNearest(createVector(grid.scale, grid.scale));
+  timerDot = createTimerDot(dotPosition, createVector(1,0));
   navigation = createNavigation(grid);
   autoRun();
 }
@@ -134,11 +134,11 @@ function mousePressed(){
 
 function handlePointAction(point){
   console.log('point action:', vectorToString(point));
-  navigation.routeImproved(car.getPosition(), point, car.getHeading());
-  car.schedule(durationMenu.value(),() => {
+  navigation.routeImproved(timerDot.getPosition(), point, timerDot.getHeading());
+  timerDot.schedule(durationMenu.value(),() => {
     let target = navigation.popTarget();
     if(target){
-      car.setPosition(target);
+      timerDot.setPosition(target);
     }
   });
 }
@@ -162,11 +162,11 @@ function keyPressed(){
 }
 
 function draw() { 
-  car.update();
+  timerDot.update();
   background(00,0,60);
   grid.draw();
   navigation.draw();
-  car.draw();
+  timerDot.draw();
 }
 
 function windowResized() {

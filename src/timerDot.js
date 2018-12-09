@@ -1,4 +1,4 @@
-function createCar(position, heading){
+function createTimerDot(position, heading){
   let N = createVector(0,-1);
   let S = createVector(0,1);
   let E = createVector(1,0);
@@ -47,7 +47,6 @@ function createCar(position, heading){
       fill(_colorB);
       arc(0,0,30,30, 0, 360 * pct, PIE)
       fill(0);
-      //rect(10, 0, 5, 5);
       pop();
     }
   };
