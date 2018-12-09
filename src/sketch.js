@@ -4,7 +4,7 @@ function autoRun(){
 
 var looping = true;
 
-var grid, timerDot, navigation, durationMenu;
+var grid, timerDot, navigation, durationMenu, vehicle;
 
 function setup() { 
   colorMode(HSL,255);
@@ -45,6 +45,7 @@ function initLevel(level){
   grid = level.grid;
   let dotPosition = grid.findNearest(createVector(grid.scale, grid.scale));
   timerDot = createTimerDot(dotPosition, createVector(1,0));
+  vehicle = createVehicle(createVector(100,100));
   navigation = createNavigation(grid);
   autoRun();
 }
@@ -161,12 +162,19 @@ function keyPressed(){
   }
 }
 
-function draw() { 
+function update(){
   timerDot.update();
+  vehicle.update();
+}
+
+function draw() { 
+  update();
+
   background(00,0,60);
   grid.draw();
   navigation.draw();
   timerDot.draw();
+  vehicle.draw();
 }
 
 function windowResized() {
